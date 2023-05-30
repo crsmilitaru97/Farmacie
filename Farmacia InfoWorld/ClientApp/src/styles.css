@@ -1,0 +1,77 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+code {
+  color: #e01a76;
+}
+
+/*.btn-primary {
+  background-color: #4CA9EE;*/ /* Blue */
+  /*border: none;
+  color: white;
+  padding: 6px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 20px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  border-radius: 10px;
+}*/
+
+.home_button {
+  background-color: #4CA9EE; /* Blue */
+  border: none;
+  color: white;
+  width: 200px;
+  height: 60px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 20px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  border-radius: 10px;
+}
+
+.form-row {
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
+.form-header {
+  margin-bottom: 20px;
+  margin-top: 35px;
+}
+
+.form-input {
+}
+
+.input-header {
+  padding-bottom: 10px;
+}
+
+/*.action-button {
+  background-color: #5ECD81;*/ /* Green */
+  /*border: none;
+  color: white;
+  padding: 6px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  border-radius: 10px;
+}
+
+  .action-button:hover {
+    box-shadow: 0 5px 5px 0 rgba(0,0,0,0.24), 0 5px 5px 0 rgba(0,0,0,0.19);
+  }*/

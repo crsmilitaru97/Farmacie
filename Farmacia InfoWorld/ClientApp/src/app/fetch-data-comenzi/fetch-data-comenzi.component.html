@@ -1,0 +1,63 @@
+<h1 id="tableLabel">Comenzi</h1>
+
+<p *ngIf="!comz"><em>Loading...</em></p>
+
+<button class="btn-primary">Adauga comanda</button>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="comz">
+  <thead>
+    <tr>
+      <th width="40px" align="center">Selectat</th>
+      <th>ID</th>
+      <th>Nume Pacient</th>
+      <th>Data</th>
+      <th>Status</th>
+      <th>Actiuni</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let com of comz">
+      <tr>
+        <td width="40px" align="center">
+          <input type="checkbox" [checked]="com.selectat" (change)="selectedChanged(com)">
+        </td>
+        <td>{{ com.id }}</td>
+        <td>{{ com.numePacient }}</td>
+        <td>{{ com.data }}</td>
+        <td *ngIf="com.status == 1">Neaprobata</td>
+        <td *ngIf="com.status == 2">Aprobata</td>
+        <td *ngIf="com.status == 3">Stearsa</td>
+        <td>
+          <button class="action-button" *ngIf="com.status == 1" (click)="aprobaClicked(com)">Aproba</button>
+          <button class="action-button" *ngIf="com.status == 1" (click)="modificaClicked(com)">Modifica</button>
+        </td>
+        <td>
+          <button class="action-button" (click)="toggleTable(com)">Detalii</button>
+        </td>
+      </tr>
+      <tr *ngIf="com.arataDetalii">
+        <td colspan="4">
+          <table class='table table-striped' style="width: 100%">
+            <thead>
+              <tr>
+                <th>Denumire</th>
+                <th>Forma</th>
+                <th>Cantitate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let medi of com.medicamente">
+                <td>{{ medi.denumire }}</td>
+                <td>{{ medi.forma }}</td>
+                <td>{{ medi.cantitate }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+
+<button style="float: right;" class="btn-primary" (click)="stergeClicked()">Sterge</button>
+
