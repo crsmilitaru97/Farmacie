@@ -1,0 +1,18 @@
+<h2 id="tableLabel">Comanda</h2>
+
+<form (ngSubmit)="salveazaClicked()">
+  <h5 class="form-header">Date comanda</h5>
+  <div class="row g-2">
+    <div class="col col-lg-3">
+      <div class="form-floating mb-3">
+        <input class="form-control" type="text" id="pacient" name="pacient" placeholder="Nume pacient" [(ngModel)]="comanda.pacient" required>
+        <label for="nume">Nume</label>
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <button class="btn btn-primary">Salveaza</button>
+</form>
+
+<div class="container py-5"> </div>

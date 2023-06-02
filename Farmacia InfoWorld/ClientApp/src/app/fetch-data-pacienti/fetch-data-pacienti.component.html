@@ -2,13 +2,14 @@
 
 <p *ngIf="!pacs"><em>Loading...</em></p>
 
-<button class="btn btn-primary" [routerLink]="['/view-pacient']">Adauga pacient</button>
+<div class="container py-2" style="padding-left:0px">
+  <button class="btn btn-primary" [routerLink]="['/view-pacient']">Adauga pacient</button>
+</div>
 
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="pacs">
   <thead>
     <tr>
-      <th width="40px" align="center">Selectat</th>
-      <th>ID</th>
+      <th>Selectat</th>
       <th>Nume</th>
       <th>Prenume</th>
       <th>CNP</th>
@@ -20,14 +21,13 @@
   </thead>
   <tbody>
     <tr *ngFor="let pac of pacs">
-      <td width="40px" align="center">
+      <td width=1% align="center">
         <input type="checkbox" [(ngModel)]="pac.selectat">
       </td>
-      <td>{{ pac.id }}</td>
       <td>{{ pac.nume }}</td>
       <td>{{ pac.prenume }}</td>
       <td>{{ pac.cnp }}</td>
-      <td>{{ pac.data_nastere }}</td>
+      <td>{{ pac.data_Nastere| date:'dd.MM.yyyy'}}</td>
       <td>{{ pac.telefon }}</td>
       <td>{{ pac.email }}</td>
       <td>
@@ -38,3 +38,5 @@
 </table>
 
 <button style="float: right;" class="btn btn-primary" (click)="stergeClicked()">Sterge</button>
+
+<div class="container py-5"> </div>

@@ -9,7 +9,18 @@ const PROXY_CONFIG = [
       "/listamedicamente",
       "/listapacienti",
       "/listacomenzi",
-      "/adaugapacient"
+
+      "/pacient/adauga",
+      "/pacient/modifica",
+      "/pacient/sterge",
+
+      "/medicament/loturi",
+      "/medicament/adauga",
+      "/medicament/modifica",
+      "/medicament/sterge",
+
+      "/comanda/adauga",
+      "/stoc"
    ],
     target: target,
     secure: false,

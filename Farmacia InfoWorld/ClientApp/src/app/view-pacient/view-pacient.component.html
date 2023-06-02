@@ -1,41 +1,44 @@
+
 <h2 id="tableLabel">Fisa pacient</h2>
 
 <form (ngSubmit)="salveazaClicked()">
   <h5 class="form-header">Date personale</h5>
-  <div class="row g-2">
-    <div class="col col-lg-3">
-      <div class="form-floating mb-3">
-        <input class="form-control" type="text" id="nume" name="nume" [(ngModel)]="pacient.nume" required>
-        <label for="nume">Nume</label>
+  <div>
+    <div class="row g-2">
+      <div class="col col-lg-3">
+        <div class="form-floating mb-3">
+          <input class="form-control" type="text" id="nume" name="nume" placeholder="Nume pacient" [(ngModel)]="pacient.nume" required>
+          <label for="nume">Nume</label>
+        </div>
+      </div>
+      <div class="col col-lg-3">
+        <div class="form-floating mb-3">
+          <input class="form-control" type="text" id="prenume" name="prenume" placeholder="Prenume pacient" [(ngModel)]="pacient.prenume" required>
+          <label for="prenume">Prenume</label>
+        </div>
       </div>
     </div>
-    <div class="col col-lg-3">
-      <div class="form-floating mb-3">
-        <input class="form-control" type="text" id="prenume" name="prenume" [(ngModel)]="pacient.prenume" required>
-        <label for="prenume">Prenume</label>
-      </div>
-    </div>
-  </div>
-  <div class="row g-2">
-    <div class="col col-lg-2">
-      <div class="form-floating mb-3">
-        <input class="form-control" type="text" id="cnp" name="cnp" [(ngModel)]="pacient.cnp" required>
-        <label for="cnp">CNP</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input class="form-control" type="date" id="data_nastere" name="data_nastere" [(ngModel)]="pacient.data_nastere" required>
-        <label for="data_nastere">Data nastere</label>
+    <div class="row g-2">
+      <div class="col col-lg-2">
+        <div class="form-floating mb-3">
+          <input class="form-control" type="text" id="cnp" name="cnp" placeholder="CNP pacient" [(ngModel)]="pacient.cnp" required>
+          <label for="cnp">CNP</label>
+        </div>
+        <div id="personal-container" class="form-floating mb-3">
+          <input class="date form-control" type="datetime" id="data_nastere" name="data_nastere" [(ngModel)]="pacient.data_Nastere" required>
+          <label for="data_nastere">Data nastere</label>
+        </div>
       </div>
     </div>
   </div>
 
   <h5 class="form-header">Adrese</h5>
-  <div class="row g-2">
-    <div class="col col-lg-3">
+  <div id="address-container" *ngFor="let adresa of pacient.adrese;let i = index">
+    <div class="col col-lg-2">
       <div class="form-floating mb-3">
-        <select class="form-select" id="tip_adresa" aria-label="Floating label select example">
-          <option selected>Acasa</option>
-          <option value="1">Munca</option>
+        <select class="form-select" id="tip_adresa" name="tip_adresa{{i}}" placeholder="Tip adresa pacient" [(ngModel)]="adresa.tip_Adresa">
+          <option value="0" selected>Acasa</option>
+          <option value="1">Serviciu</option>
           <option value="2">Alta</option>
         </select>
         <label for="tip_adresa">Tip adresa</label>
@@ -44,42 +47,53 @@
     <div class="row g-2">
       <div class="col col-lg-3">
         <div class="form-floating mb-3">
-          <input class="form-control" type="text" id="adresa" name="adresa" required>
+          <input class="form-control" type="text" id="linie_adresa" name="linie_adresa{{i}}" placeholder="Adresa pacient" [(ngModel)]="adresa.linie_Adresa" required>
           <label>Adresa</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input class="form-control" type="text" id="localitate" name="localitate" required>
-          <label>Localitate</label>
         </div>
       </div>
       <div class="col col-lg-3">
         <div class="form-floating mb-3">
-          <input class="form-control" type="text" id="judet" name="judet" required>
-          <label>Judet</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input class="form-control" type="number" id="cod_postal" name="cod_postal" required>
-          <label>Cod Postal</label>
+          <input class="form-control" type="text" id="localitate" name="localitate{{i}}" placeholder="Localitate pacient" [(ngModel)]="adresa.localitate" required>
+          <label>Localitate</label>
         </div>
       </div>
     </div>
+    <div class="row g-2">
+      <div class="col col-lg-3">
+        <div class="form-floating mb-3">
+          <input class="form-control" type="text" id="judet" name="judet{{i}}" placeholder="Judet pacient" [(ngModel)]="adresa.judet" required>
+          <label>Judet</label>
+        </div>
+      </div>
+      <div class="col col-lg-3">
+        <div class="form-floating mb-3">
+          <input class="form-control" type="text" id="cod_postal" name="cod_postal{{i}}" placeholder="Cod postal pacient" [(ngModel)]="adresa.cod_Postal" required>
+          <label>Cod postal</label>
+        </div>
+      </div>
+    </div>
+    <br />
   </div>
-
-  <br />
-  <button class="btn btn-secondary btn-sm" onclick="addRow()">Adresa noua</button>
+  <div class="row g-2">
+    <div class="col col-lg-6">
+      <button style="float: right;" class="btn btn-secondary btn-sm" type="button" (click)="addRow(1)">Adresa noua</button>
+    </div>
+  </div>
 
   <h5 class="form-header">Contact</h5>
   <div class="row g-2">
     <div class="col col-lg-3">
       <div class="form-floating mb-3">
-        <input class="form-control" type="tel" id="telefon" name="telefon" [(ngModel)]="pacient.telefon">
-        <label>Telefon:</label><br>
+        <input class="form-control" type="tel" id="telefon" name="telefon" placeholder="Telefon pacient" [(ngModel)]="pacient.telefon">
+        <label>Telefon</label>
+        <br>
       </div>
     </div>
     <div class="col col-lg-3">
       <div class="form-floating mb-3">
-        <input class="form-control" type="email" id="email" name="email" [(ngModel)]="pacient.email">
-        <label>Email:</label><br>
+        <input class="form-control" type="email" id="email" name="email" placeholder="Email pacient" [(ngModel)]="pacient.email">
+        <label>Email</label>
+        <br>
       </div>
     </div>
   </div>

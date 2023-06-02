@@ -2,13 +2,15 @@
 
 <p *ngIf="!comz"><em>Loading...</em></p>
 
-<button class="btn-primary">Adauga comanda</button>
+<div class="container py-2" style="padding-left:0px">
+  <button class="btn btn-primary" [routerLink]="['/view-comanda']">Adauga comanda</button>
+  <button class="btn btn-primary" [routerLink]="['/view-comanda']" style="margin-left:10px">Adauga stoc</button>
+</div>
 
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="comz">
   <thead>
     <tr>
-      <th width="40px" align="center">Selectat</th>
-      <th>ID</th>
+      <th>Selectat</th>
       <th>Nume Pacient</th>
       <th>Data</th>
       <th>Status</th>
@@ -18,21 +20,20 @@
   <tbody>
     <ng-container *ngFor="let com of comz">
       <tr>
-        <td width="40px" align="center">
+        <td width=1% align="center">
           <input type="checkbox" [checked]="com.selectat" (change)="selectedChanged(com)">
         </td>
-        <td>{{ com.id }}</td>
         <td>{{ com.numePacient }}</td>
         <td>{{ com.data }}</td>
         <td *ngIf="com.status == 1">Neaprobata</td>
         <td *ngIf="com.status == 2">Aprobata</td>
         <td *ngIf="com.status == 3">Stearsa</td>
         <td>
-          <button class="action-button" *ngIf="com.status == 1" (click)="aprobaClicked(com)">Aproba</button>
-          <button class="action-button" *ngIf="com.status == 1" (click)="modificaClicked(com)">Modifica</button>
+          <button class="btn btn-secondary btn-sm" *ngIf="com.status == 1" (click)="aprobaClicked(com)">Aproba</button>
+          <button class="btn btn-secondary btn-sm" *ngIf="com.status == 1" (click)="modificaClicked(com)" style="margin-left:10px">Modifica</button>
         </td>
         <td>
-          <button class="action-button" (click)="toggleTable(com)">Detalii</button>
+          <button class="btn btn-secondary btn-sm" (click)="toggleTable(com)">Detalii</button>
         </td>
       </tr>
       <tr *ngIf="com.arataDetalii">
@@ -59,5 +60,5 @@
   </tbody>
 </table>
 
-<button style="float: right;" class="btn-primary" (click)="stergeClicked()">Sterge</button>
+<button style="float: right;" class="btn btn-primary" (click)="stergeClicked()">Sterge</button>
 

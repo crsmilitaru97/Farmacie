@@ -13,6 +13,8 @@ import { PacientComponent } from './fetch-data-pacienti/fetch-data-pacienti.comp
 import { ComenziComponent } from './fetch-data-comenzi/fetch-data-comenzi.component';
 import { ViewPacientComponent } from './view-pacient/view-pacient.component';
 import { ViewMedicamentComponent } from './view-medicament/view-medicament.component';
+import { ViewComandaComponent } from './view-comanda/view-comanda.component';
+import { ViewLoturiComponent } from './view-loturi/view-loturi.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { ViewMedicamentComponent } from './view-medicament/view-medicament.compo
     PacientComponent,
     ComenziComponent,
     ViewPacientComponent,
-    ViewMedicamentComponent
+    ViewMedicamentComponent,
+    ViewComandaComponent,
+    ViewLoturiComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -37,7 +41,9 @@ import { ViewMedicamentComponent } from './view-medicament/view-medicament.compo
       { path: 'fetch-data-pacienti', component: PacientComponent },
       { path: 'fetch-data-comenzi', component: ComenziComponent },
       { path: 'view-pacient', component: ViewPacientComponent },
-      { path: 'view-medicament', component: ViewMedicamentComponent }
+      { path: 'view-medicament', component: ViewMedicamentComponent },
+      { path: 'view-comanda', component: ViewComandaComponent },
+      { path: 'view-loturi', component: ViewLoturiComponent }
     ])
   ],
   providers: [],

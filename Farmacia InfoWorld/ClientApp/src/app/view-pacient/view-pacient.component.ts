@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
+import { Inject } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-pacient',
@@ -9,36 +10,71 @@ import { ActivatedRoute } from '@angular/router';
 export class ViewPacientComponent implements OnInit {
 
   pacient = new Pacient();
+  baseUrl: string;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, @Inject('BASE_URL') baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      const encodedData = params['pacient'];
-      const decodedData = JSON.parse(decodeURIComponent(encodedData));
-      this.pacient = decodedData;
+      if (Object.keys(params).length > 0) {
+        const encodedData = params['pacient'];
+        const decodedData = JSON.parse(decodeURIComponent(encodedData));
+        this.pacient = decodedData;
+      }
+      else {
+        this.addRow(0);
+      }
     });
   }
 
   salveazaClicked() {
-    this.http.post('https://localhost:44462/' + 'adaugapacient', this.pacient).subscribe({
-      next: (v) => { }
-    });
+    if (!this.pacient.id) {
+      this.http.post(this.baseUrl + 'pacient/adauga', this.pacient).subscribe({
+        next: (v) => {
+          this.router.navigate(['/fetch-data-pacienti']);
+        }
+      });
+    }
+    else {
+      this.http.post(this.baseUrl + 'pacient/modifica', this.pacient).subscribe({
+        next: (v) => {
+          https://www.msn.com/en-xl/lifestyle/other/check-out-these-19-scrumptious-local-specialties-when-you-visit-rome/ar-AA1bWr6r?cvid=deaa564cdbe147fddf327daae9be2d97
+          this.router.navigate(['/fetch-data-pacienti']);
+        }
+      });
+    }
   }
 
-  addRow() {
+  addRow(defaultSelected: number) {
+    if (!this.pacient.id) {
+      this.pacient.adrese = [];
+    }
 
+    const adresaNoua = new Adresa();
+    adresaNoua.tip_Adresa = defaultSelected;
+    this.pacient.adrese?.push(adresaNoua);
   }
-
 }
 
 export class Pacient {
-  selectat: any;
-  id: any;
+  id: any | 0;
   nume: any;
   prenume: any;
   cnp: any;
-  data_nastere: any;
+  data_Nastere: any;
   telefon: any;
   email: any;
+  adrese: Array<Adresa> | undefined;
+}
+
+export class Adresa {
+  id: any;
+  tip_Adresa: any;
+  linie_Adresa: any;
+  localitate: any;
+  judet: any;
+  cod_Postal: any;
+  id_Pacient: any | 0;
 }

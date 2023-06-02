@@ -24,8 +24,6 @@ namespace Farmacia_InfoWorld.Controllers
             List<Comanda> ListaComenzi = new List<Comanda>();
             string query = @"SELECT Nume + ' ' + Prenume AS NumePacient, * FROM Comanda 
                              INNER JOIN Pacient ON Pacient.ID = Comanda.ID_Pacient";
-                             //INNER JOIN ComandaMedicament ON ComandaMedicament.ID_Comanda = Comanda.ID";
-            //INNER JOIN Medicament ON ComandaMedicament.ID_Medicament = Medicament.ID
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("farmacieConnectionString");
             SqlDataReader myReader;
@@ -42,28 +40,7 @@ namespace Farmacia_InfoWorld.Controllers
                         Comanda comanda = new Comanda();
                         comanda.ID = Convert.ToInt32(dr["ID"]);
                         comanda.NumePacient = Convert.ToString(dr["NumePacient"]);
-
-                        string queryMed = $@"SELECT DISTINCT ComandaMedicament.Cantitate, * FROM Comanda
-                                             INNER JOIN ComandaMedicament ON ComandaMedicament.ID_Comanda = Comanda.ID
-                                             INNER JOIN Medicament ON ComandaMedicament.ID_Medicament = Medicament.ID
-                                             WHERE Comanda.ID_Pacient = {Convert.ToString(dr["ID_Pacient"])}";
-
-
-                        using (SqlCommand commandMed = new SqlCommand(queryMed, myCon))
-                        {
-                            SqlDataReader readerMed = commandMed.ExecuteReader();
-                            DataTable tableMed = new DataTable();
-                            tableMed.Load(readerMed);
-
-                            foreach (DataRow med in tableMed.Rows)
-                            {
-                                Medicament medicament = new Medicament();
-                                medicament.Denumire = Convert.ToString(med["Denumire"]);
-                                medicament.Cantitate = Convert.ToInt32(med["Cantitate"]);
-
-                                comanda.Medicamente.Add(medicament);
-                            }
-                        }
+                        comanda.Medicamente = GetMedicamente(myCon, dr);
                         comanda.Status = Convert.ToString(dr["Status"]);
                         ListaComenzi.Add(comanda);
                     }
@@ -74,6 +51,31 @@ namespace Farmacia_InfoWorld.Controllers
             }
 
             return ListaComenzi;
+        }
+
+        private static List<Medicament> GetMedicamente(SqlConnection myCon, DataRow dr)
+        {
+            List<Medicament> meds = new List<Medicament>();
+            string queryMed = $@"SELECT DISTINCT ComandaMedicament.Cantitate, * FROM Comanda
+                                             INNER JOIN ComandaMedicament ON ComandaMedicament.ID_Comanda = Comanda.ID
+                                             INNER JOIN Medicament ON ComandaMedicament.ID_Medicament = Medicament.ID
+                                             WHERE Comanda.ID_Pacient = {Convert.ToString(dr["ID_Pacient"])}";
+
+
+            using (SqlCommand commandMed = new SqlCommand(queryMed, myCon))
+            {
+                SqlDataReader readerMed = commandMed.ExecuteReader();
+                DataTable tableMed = new DataTable();
+                tableMed.Load(readerMed);
+
+                foreach (DataRow med in tableMed.Rows)
+                {
+                    Medicament medicament = new Medicament();
+                    medicament.Denumire = Convert.ToString(med["Denumire"]);
+                    meds.Add(medicament);
+                }
+            }
+            return meds;
         }
     }
 }

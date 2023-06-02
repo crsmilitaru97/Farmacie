@@ -12,4 +12,15 @@ namespace Farmacia_InfoWorld
 
         public string? Status { get; set; }
     }
+
+    public class ComandaMedicament
+    {
+        public int ID { get; set; }
+
+        public int ID_Comanda { get; set; }
+
+        public int ID_Medicament { get; set; }
+
+        public int Cantitate { get; set; }
+    }
 }

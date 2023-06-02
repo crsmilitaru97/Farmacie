@@ -2,31 +2,32 @@
 
 <p *ngIf="!meds"><em>Loading...</em></p>
 
-<button class="btn btn-primary" [routerLink]="['/view-medicament']">Adauga medicament</button>
+<div class="container py-2" style="padding-left:0px">
+  <button class="btn btn-primary" [routerLink]="['/view-medicament']">Adauga medicament</button>
+  <button class="btn btn-primary" [routerLink]="['/view-loturi']" style="margin-left:10px">Adauga stoc</button>
+</div>
 
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="meds">
   <thead>
     <tr>
-      <th width="40px" align="center">Selectat</th>
-      <th>ID</th>
+      <th>Selectat</th>
       <th>Denumire</th>
-      <th>Gramaj</th>
       <th>Forma</th>
       <th>Descriere</th>
+      <th>Pret</th>
       <th>Actiuni</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let med of meds">
-      <td width="40px" align="center">
-        <input type="checkbox" [checked]="med.selectat" (change)="selectedChanged(med)">
+      <td width=1% align="center">
+        <input type="checkbox" [(ngModel)]="med.selectat">
       </td>
-      <td>{{ med.id }}</td>
-      <td>{{ med.denumire }}</td>
-      <td>{{ med.gramaj }}</td>
-      <td>{{ med.forma }}</td>
-      <td>{{ med.descriere }}</td>
-      <td>
+      <td width=30>{{ med.denumire }}</td>
+      <td width=10%>{{ getForma(med.forma) }}</td>
+      <td width=35%>{{ getDescriere(med.descriere) }}</td>
+      <td width=10%>{{ med.pret }}</td>
+      <td width=10%>
         <button class="btn btn-secondary btn-sm" (click)="modificaClicked(med)">Modifica</button>
       </td>
     </tr>
@@ -34,3 +35,5 @@
 </table>
 
 <button style="float: right;" class="btn btn-primary" (click)="stergeClicked()">Sterge</button>
+
+<div class="container py-5"> </div>

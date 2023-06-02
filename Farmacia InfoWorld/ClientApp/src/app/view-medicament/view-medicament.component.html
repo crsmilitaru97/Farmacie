@@ -1,31 +1,38 @@
 <h2 id="tableLabel">Fisa medicament</h2>
 
 <form (ngSubmit)="salveazaClicked()">
-  <h5 class="form-header">Date personale</h5>
-  <div class="row g-2">
-    <div class="col col-lg-3">
-      <div class="form-floating mb-3">
-        <input class="form-control" type="text" id="denumire" name="denumire" [(ngModel)]="medicament.denumire" required>
-        <label for="denumire">Denumire</label>
-      </div>
+  <h5 class="form-header">Date medicament</h5>
+  <div class="col col-lg-3">
+    <div class="form-floating mb-3">
+      <input class="form-control" type="text" id="denumire" name="denumire" placeholder="Denumire medicament" [(ngModel)]="medicament.denumire" required>
+      <label for="denumire">Denumire</label>
     </div>
-    <div class="col col-lg-3">
-      <div class="form-floating mb-3">
-        <input class="form-control" type="text" id="concentratie" name="concentratie" [(ngModel)]="medicament.concentratie" required>
-        <label for="concentratie">Concentratie</label>
-      </div>
+  </div>
+  <div class="col col-lg-2">
+    <div class="form-floating mb-3">
+      <select class="form-select" id="forma" name="forma" placeholder="Forma medicament" [(ngModel)]="medicament.forma">
+        <option value="COMP">Comprimate</option>
+        <option value="COPF">Comprimate filmate</option>
+        <option value="COPS">Comprimate de supt</option>
+        <option value="COPE">Comprimate efervescente</option>
+        <option value="CAPS">Capsule</option>
+        <option value="TABL">Tablete</option>
+        <option value="SUPO">Supozitoare</option>
+        <option value="SIRO">Sirop</option>
+      </select>
+      <label for="forma">Forma</label>
     </div>
-    <div class="col col-lg-3">
-      <div class="form-floating mb-3">
-        <input class="form-control" type="text" id="forma" name="forma" [(ngModel)]="medicament.forma" required>
-        <label for="forma">Forma</label>
-      </div>
+  </div>
+  <div class="col col-lg-2">
+    <div class="form-floating mb-3">
+      <input class="form-control" type="number" id="pret" name="pret" placeholder="Pret medicament" [(ngModel)]="medicament.pret" required>
+      <label for="descriere">Pret</label>
     </div>
-    <div class="col col-lg-3">
-      <div class="form-floating mb-3">
-        <input class="form-control" type="text" id="descriere" name="descriere" [(ngModel)]="medicament.descriere" required>
-        <label for="descriere">Descriere</label>
-      </div>
+  </div>
+  <div class="col col-lg-6">
+    <div class="form-floating mb-3">
+      <textarea class="form-control" type="text" id="descriere" name="descriere" placeholder="Descriere medicament" style="height: 300px;" [(ngModel)]="medicament.descriere" required></textarea>
+      <label for="descriere">Descriere</label>
     </div>
   </div>
 

@@ -7,20 +7,14 @@ import { Component, Inject } from '@angular/core';
 })
 export class PacientComponent {
   public pacs: Pacient[] = [];
+  http2: any;
+  baseUrl: string;
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    this.http2 = http;
+    this.baseUrl = baseUrl;
     http.get<Pacient[]>(baseUrl + 'listapacienti').subscribe({
       next: (v) => { this.pacs = v }
-    });
-  }
-
-  stergeClicked() {
-    const selectedRows = this.pacs.filter((row) => row.selectat);
-    selectedRows.forEach((row) => {
-      const index = this.pacs.indexOf(row);
-      if (index > -1) {
-        this.pacs.splice(index, 1);
-      }
     });
   }
 
@@ -30,8 +24,15 @@ export class PacientComponent {
     window.location.href = modifyPageUrl;
   }
 
-  selectedChanged(pac: Pacient) {
-    pac.selectat = !pac.selectat;
+  stergeClicked() {
+    const selectedRows = this.pacs.filter((row) => row.selectat);
+    selectedRows.forEach((row) => {
+      const index = this.pacs.indexOf(row);
+      if (index > -1) {
+        this.http2.post(this.baseUrl + 'pacient/sterge', row).subscribe({ next: () => { } });
+        this.pacs.splice(index, 1);
+      }
+    });
   }
 }
 
@@ -41,7 +42,7 @@ interface Pacient {
   nume: string;
   prenume: string;
   cnp: string;
-  data_nastere: Date;
+  data_Nastere: Date;
   telefon: string;
   email: string;
 }
