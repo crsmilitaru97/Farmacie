@@ -4,13 +4,17 @@ namespace Farmacia_InfoWorld
     {
         public int ID { get; set; }
 
-        public string NumePacient { get; set; } = string.Empty;
+        public int? Status { get; set; }
+
+        public string? NumePacient { get; set; }
+
+        public decimal Pret { get; set; }
+
+        public DateTime Data { get; set; }
+
+        public int ID_Pacient { get; set; }
 
         public List<Medicament> Medicamente { get; set; } = new List<Medicament>();
-
-        public int Cantitate { get; set; }
-
-        public string? Status { get; set; }
     }
 
     public class ComandaMedicament

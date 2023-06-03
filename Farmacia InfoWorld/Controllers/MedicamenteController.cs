@@ -40,7 +40,7 @@ namespace Farmacia_InfoWorld.Controllers
                         medicament.Denumire = Convert.ToString(dr["Denumire"]);
                         medicament.Forma = Convert.ToString(dr["Forma"]);
                         medicament.Descriere = Convert.ToString(dr["Descriere"]);
-                        medicament.Pret = Convert.ToInt32(dr["Pret"]);
+                        medicament.Pret = Convert.ToDecimal(dr["Pret"]);
                         ListaMedicamente.Add(medicament);
                     }
 
@@ -83,6 +83,28 @@ namespace Farmacia_InfoWorld.Controllers
                 }
             }
             return loturi;
+        }
+
+        [HttpPost("/medicament/loturi/adauga")]
+        public JsonResult AdaugaLot([FromBody] Lot lot)
+        {
+            string query = @"INSERT INTO Lot (Data_Expirare, Cantitate, ID_Medicament) 
+                             VALUES (@Data_Expirare, @Cantitate, @ID_Medicament)";
+
+            string sqlDataSource = _configuration.GetConnectionString("farmacieConnectionString");
+
+            using (var myCon = new SqlConnection(sqlDataSource))
+            {
+                using var myCommand = new SqlCommand(query, myCon);
+                myCommand.Parameters.AddWithValue("@Data_Expirare", lot.Data_Expirare);
+                myCommand.Parameters.AddWithValue("@Cantitate", lot.Cantitate);
+                myCommand.Parameters.AddWithValue("@ID_Medicament", lot.ID_Medicament);
+
+                myCon.Open();
+                myCommand.ExecuteNonQuery();
+                myCon.Close();
+            }
+            return new JsonResult("Updated Successfully");
         }
 
         [HttpPost("/medicament/adauga")]

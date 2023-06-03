@@ -40,7 +40,6 @@ export class ViewPacientComponent implements OnInit {
     else {
       this.http.post(this.baseUrl + 'pacient/modifica', this.pacient).subscribe({
         next: (v) => {
-          https://www.msn.com/en-xl/lifestyle/other/check-out-these-19-scrumptious-local-specialties-when-you-visit-rome/ar-AA1bWr6r?cvid=deaa564cdbe147fddf327daae9be2d97
           this.router.navigate(['/fetch-data-pacienti']);
         }
       });

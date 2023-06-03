@@ -1,50 +1,52 @@
-<h2 id="tableLabel">Loturi</h2>
+<h2 id="tableLabel">Gestiune stoc</h2>
 
-<h5 class="form-header">Medicament</h5>
-<div class="col col-lg-3">
-  <div class="form-floating mb-3">
-    <select class="form-select" id="medicament" name="medicament" placeholder="Medicament" [(ngModel)]="id_medicament" (change)="alegeMedicament()">
-      <option *ngFor="let med of medicamente" [value]="med.id">{{ med.denumire }}</option>
-    </select>
-    <label for="medicament">Medicament</label>
-  </div>
-</div>
-
-<h5 class="form-header">Stoc</h5>
-<table class='table table-striped' aria-labelledby="tableLabel">
-  <thead>
-    <tr>
-      <th>Data expirare</th>
-      <th>Cantitate</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let lot of loturi">
-      <td>{{ lot.data_Expirare }}</td>
-      <td>{{ lot.cantitate }}</td>
-    </tr>
-  </tbody>
-</table>
-
-<h5 class="form-header">Adauga stoc</h5>
-<div class="row g-2">
-  <div class="col col-lg-2">
-    <div class="form-floating mb-2">
-      <input class="date form-control" type="datetime" id="data_expirare" name="data_expirare" placeholder="Data expirare" required>
-      <label for="data_expirare">Data expirare</label>
+<form #myForm="ngForm">
+  <h5 class="form-header">Medicament</h5>
+  <div class="col col-lg-3">
+    <div class="form-floating mb-3">
+      <select class="form-select" id="medicament" name="medicament" placeholder="Medicament" [(ngModel)]="id_medicament" (change)="alegeMedicament()">
+        <option *ngFor="let med of medicamente" [value]="med.id">{{ med.denumire }}</option>
+      </select>
+      <label for="medicament">Medicament</label>
     </div>
   </div>
-  <div class="col col-lg-2">
-    <div class="form-floating mb-2">
-      <input class="form-control" type="number" id="cantitate" name="cantitate" placeholder="Cantitate" required>
-      <label for="cantitate">Cantitate</label>
-    </div>
-  </div>
+
+  <h5 class="form-header">Loturi</h5>
+  <table class='table table-striped' aria-labelledby="tableLabel">
+    <thead>
+      <tr>
+        <th>Data expirare</th>
+        <th>Cantitate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let lot of loturi">
+        <td>{{ lot.data_Expirare }}</td>
+        <td>{{ lot.cantitate }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h5 class="form-header">Adauga lot nou</h5>
   <div class="row g-2">
-    <div class="col col-lg-4">
-      <button style="float: right;" class="btn btn-primary" type="button" (click)="adaugaStoc()">Adauga</button>
+    <div class="col col-lg-2">
+      <div class="form-floating mb-2">
+        <input class="date form-control" type="date" id="data_expirare" name="data_expirare" placeholder="Data expirare" [(ngModel)]="lotNou.data_Expirare" required>
+        <label for="data_expirare">Data expirare</label>
+      </div>
+    </div>
+    <div class="col col-lg-2">
+      <div class="form-floating mb-2">
+        <input class="form-control" type="number" id="cantitate" name="cantitate" placeholder="Cantitate" [(ngModel)]="lotNou.cantitate" required>
+        <label for="cantitate">Cantitate</label>
+      </div>
+    </div>
+    <div class="row g-2">
+      <div class="col col-lg-4">
+        <button style="float: right;" class="btn btn-primary" type="button" (click)="adaugaStoc()" [disabled]="!myForm.form.valid">Adauga</button>
+      </div>
     </div>
   </div>
-</div>
+  </form>
 
-<div class="container py-5"> </div>
+  <div class="container py-5"> </div>

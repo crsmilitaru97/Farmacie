@@ -1,64 +1,81 @@
-<h1 id="tableLabel">Comenzi</h1>
+<h2 id="tableLabel">Comenzi</h2>
 
-<p *ngIf="!comz"><em>Loading...</em></p>
+<p *ngIf="!comenzi"><em>Loading...</em></p>
 
-<div class="container py-2" style="padding-left:0px">
+<div class="container py-3" style="padding-left:0px">
   <button class="btn btn-primary" [routerLink]="['/view-comanda']">Adauga comanda</button>
-  <button class="btn btn-primary" [routerLink]="['/view-comanda']" style="margin-left:10px">Adauga stoc</button>
 </div>
 
-<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="comz">
+<table class='table table-striped' aria-labelledby="tableLabel">
   <thead>
     <tr>
       <th>Selectat</th>
-      <th>Nume Pacient</th>
-      <th>Data</th>
+      <th>Nume pacient</th>
+      <th>Data si ora</th>
       <th>Status</th>
+      <th>Pret total</th>
       <th>Actiuni</th>
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let com of comz">
+    <ng-container *ngFor="let com of comenzi">
       <tr>
         <td width=1% align="center">
-          <input type="checkbox" [checked]="com.selectat" (change)="selectedChanged(com)">
+          <input *ngIf="com.status == 0" type="checkbox" [(ngModel)]="com.selectat" (change)="updateSelectedRows()">
         </td>
-        <td>{{ com.numePacient }}</td>
-        <td>{{ com.data }}</td>
-        <td *ngIf="com.status == 1">Neaprobata</td>
-        <td *ngIf="com.status == 2">Aprobata</td>
-        <td *ngIf="com.status == 3">Stearsa</td>
-        <td>
-          <button class="btn btn-secondary btn-sm" *ngIf="com.status == 1" (click)="aprobaClicked(com)">Aproba</button>
-          <button class="btn btn-secondary btn-sm" *ngIf="com.status == 1" (click)="modificaClicked(com)" style="margin-left:10px">Modifica</button>
+        <td width=30%>{{ com.numePacient }}</td>
+        <td width=15%>{{ getDate(com.data) }}</td>
+        <td width=10% *ngIf="com.status == 0">Neaprobata</td>
+        <td width=10% *ngIf="com.status == 1">Aprobata</td>
+        <td width=10%>{{ com.pret }} lei</td>
+        <td width=20%>
+          <button class="btn btn-secondary btn-sm" *ngIf="com.status == 0" (click)="modificaClicked(com)">Modifica</button>
+          <button class="btn btn-secondary btn-sm" *ngIf="com.status == 0" (click)="aprobaClicked(com)" style="margin-left:10px">Aproba</button>
         </td>
-        <td>
-          <button class="btn btn-secondary btn-sm" (click)="toggleTable(com)">Detalii</button>
+        <td width=10%>
+          <button style="float: right;" class="btn btn-secondary btn-sm" (click)="toggleTable(com)">Detalii</button>
         </td>
       </tr>
       <tr *ngIf="com.arataDetalii">
         <td colspan="4">
+          <hr />
+          <h5 id="tableLabel">Medicamente</h5>
           <table class='table table-striped' style="width: 100%">
             <thead>
               <tr>
                 <th>Denumire</th>
                 <th>Forma</th>
                 <th>Cantitate</th>
+                <th>Pret</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let medi of com.medicamente">
-                <td>{{ medi.denumire }}</td>
-                <td>{{ medi.forma }}</td>
-                <td>{{ medi.cantitate }}</td>
+                <td width=30%>{{ medi.denumire }}</td>
+                <td width=10%>{{ getForma(medi.forma) }}</td>
+                <td width=10%>{{ medi.cantitate }}</td>
+                <td width=10%>{{ medi.pret }} lei</td>
               </tr>
             </tbody>
           </table>
+          <hr />
         </td>
       </tr>
     </ng-container>
   </tbody>
 </table>
 
-<button style="float: right;" class="btn btn-primary" (click)="stergeClicked()">Sterge</button>
+<button style="float: right;" class="btn btn-primary" (click)="stergeClicked()" [disabled]="selectedRows.length === 0">Sterge</button>
 
+<div class="container py-5"> </div>
+
+<div id="popupContainer" class="popup-container">
+  <h5 class="form-header">Aprobare comanda</h5>
+  <div class="row g-2">
+    <p>{{ message }}</p>
+  </div>
+  <br />
+  <div class="row g-2">
+    <button style="float: right;" class="btn btn-primary" type="button" (click)="showMesajAprobare()">Adauga</button>
+  </div>
+</div>

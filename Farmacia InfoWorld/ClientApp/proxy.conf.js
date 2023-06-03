@@ -15,12 +15,15 @@ const PROXY_CONFIG = [
       "/pacient/sterge",
 
       "/medicament/loturi",
+      "/medicament/loturi/adauga",
       "/medicament/adauga",
       "/medicament/modifica",
       "/medicament/sterge",
 
       "/comanda/adauga",
-      "/stoc"
+      "/comanda/aproba",
+      "/comanda/modifica",
+      "/comanda/sterge"
    ],
     target: target,
     secure: false,

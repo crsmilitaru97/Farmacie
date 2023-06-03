@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
 import { MedicamentComponent } from './fetch-data-medicamente/fetch-data-medicamente.component';
 import { PacientComponent } from './fetch-data-pacienti/fetch-data-pacienti.component';
 import { ComenziComponent } from './fetch-data-comenzi/fetch-data-comenzi.component';
@@ -21,7 +20,6 @@ import { ViewLoturiComponent } from './view-loturi/view-loturi.component';
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
     MedicamentComponent,
     PacientComponent,
     ComenziComponent,
@@ -36,7 +34,6 @@ import { ViewLoturiComponent } from './view-loturi/view-loturi.component';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
       { path: 'fetch-data-medicamente', component: MedicamentComponent },
       { path: 'fetch-data-pacienti', component: PacientComponent },
       { path: 'fetch-data-comenzi', component: ComenziComponent },

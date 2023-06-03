@@ -11,6 +11,8 @@ export class ViewLoturiComponent implements OnInit {
   public medicamente: Medicament[] = [];
   public id_medicament: number | undefined;
   public loturi: Lot[] = [];
+  public lotNou: Lot = new Lot;
+
   baseUrl: string;
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, @Inject('BASE_URL') baseUrl: string) {
@@ -28,9 +30,17 @@ export class ViewLoturiComponent implements OnInit {
     this.http.get<Lot[]>(this.baseUrl + 'medicament/loturi?id_medicament=' + this.id_medicament).subscribe({
       next: (v) => { this.loturi = v }
     });
+    this.lotNou.id_Medicament = this.id_medicament;
   }
 
   adaugaStoc() {
+    this.http.post(this.baseUrl + 'medicament/loturi/adauga', this.lotNou).subscribe({
+      next: (v) => {
+        this.loturi.push(this.lotNou);
+        this.lotNou = new Lot;
+        this.lotNou.id_Medicament = this.id_medicament;
+      }
+    });
   }
 }
 

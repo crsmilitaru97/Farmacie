@@ -1,6 +1,6 @@
 <h2 id="tableLabel">Fisa medicament</h2>
 
-<form (ngSubmit)="salveazaClicked()">
+<form (ngSubmit)="salveazaClicked()" #myForm="ngForm">
   <h5 class="form-header">Date medicament</h5>
   <div class="col col-lg-3">
     <div class="form-floating mb-3">
@@ -10,7 +10,7 @@
   </div>
   <div class="col col-lg-2">
     <div class="form-floating mb-3">
-      <select class="form-select" id="forma" name="forma" placeholder="Forma medicament" [(ngModel)]="medicament.forma">
+      <select class="form-select" id="forma" name="forma" placeholder="Forma medicament" [(ngModel)]="medicament.forma" required>
         <option value="COMP">Comprimate</option>
         <option value="COPF">Comprimate filmate</option>
         <option value="COPS">Comprimate de supt</option>
@@ -31,13 +31,13 @@
   </div>
   <div class="col col-lg-6">
     <div class="form-floating mb-3">
-      <textarea class="form-control" type="text" id="descriere" name="descriere" placeholder="Descriere medicament" style="height: 300px;" [(ngModel)]="medicament.descriere" required></textarea>
+      <textarea class="form-control" type="text" id="descriere" name="descriere" placeholder="Descriere medicament" style="height: 300px;" [(ngModel)]="medicament.descriere"></textarea>
       <label for="descriere">Descriere</label>
     </div>
   </div>
 
   <br />
-  <button class="btn btn-primary">Salveaza</button>
+  <button class="btn btn-primary" [disabled]="!myForm.form.valid">Salveaza</button>
 </form>
 
 <div class="container py-5"> </div>

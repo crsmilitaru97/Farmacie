@@ -12,9 +12,11 @@ namespace Farmacia_InfoWorld
 
         public string? Descriere { get; set; }
 
-        public int Pret { get; set; }
+        public decimal Pret { get; set; }
 
         public List<Lot> Loturi { get; set; } = new List<Lot>();
+
+        public int Cantitate { get; set; }
     }
 
     public class Lot

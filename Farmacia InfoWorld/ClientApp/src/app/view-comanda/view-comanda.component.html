@@ -1,18 +1,84 @@
 <h2 id="tableLabel">Comanda</h2>
 
-<form (ngSubmit)="salveazaClicked()">
-  <h5 class="form-header">Date comanda</h5>
+<form (ngSubmit)="salveazaClicked()" #myForm="ngForm">
+  <h5 class="form-header">Detalii comanda</h5>
   <div class="row g-2">
+    <div class="col col-lg-1">
+      <div id="personal-container" class="form-floating mb-3">
+        <input class="form-control" type="text" id="id" name="id" [(ngModel)]="comanda.id" disabled>
+        <label for="data">Numar</label>
+      </div>
+    </div>
     <div class="col col-lg-3">
       <div class="form-floating mb-3">
-        <input class="form-control" type="text" id="pacient" name="pacient" placeholder="Nume pacient" [(ngModel)]="comanda.pacient" required>
-        <label for="nume">Nume</label>
+        <select class="form-select" id="pacient" name="pacient" placeholder="Pacient" [(ngModel)]="comanda.iD_Pacient" required>
+          <option *ngFor="let pac of pacienti" [value]="pac.id">{{ pac.nume}} {{pac.prenume }}</option>
+        </select>
+        <label for="pacient">Pacient</label>
+      </div>
+    </div>
+    <div class="col col-lg-2">
+      <div id="personal-container" class="form-floating mb-3">
+        <input class="form-control" type="text" id="data" name="data" [value]="getDate(comanda.data)" disabled>
+        <label for="data">Data</label>
+      </div>
+    </div>
+    <div class="col col-lg-1">
+      <div class="form-floating mb-3">
+        <input class="form-control" type="text" id="pret" name="pret" placeholder="Pret" [value]="comanda.pret + ' lei'" disabled>
+        <label for="pret">Total</label>
       </div>
     </div>
   </div>
 
+  <h5 class="form-header">Medicamente</h5>
+  <div class="container py-2" style="padding-left:0px">
+    <button id="showPopupButton" class="btn btn-primary" (click)="afiseazaAdaugaMedicament()" type="button">Adauga medicament</button>
+  </div>
+
+  <table class='table table-striped' style="width: 100%">
+    <thead>
+      <tr>
+        <th>Denumire</th>
+        <th>Forma</th>
+        <th>Cantitate</th>
+        <th>Pret</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let medi of comanda.medicamente">
+        <td width=30% required>{{ medi.denumire }}</td>
+        <td width=10%>{{ getForma(medi.forma) }}</td>
+        <td width=10%>{{ medi.cantitate }}</td>
+        <td width=10%>{{ medi.pret + ' lei'}}</td>
+      </tr>
+    </tbody>
+  </table>
+
   <br />
-  <button class="btn btn-primary">Salveaza</button>
+  <button class="btn btn-primary" [disabled]="comanda.medicamente.length===0 || !myForm.form.valid">Salveaza</button>
 </form>
 
 <div class="container py-5"> </div>
+
+<div id="popupContainer" class="popup-container">
+  <h5 class="form-header">Adauga medicament</h5>
+  <div class="row g-2">
+    <div class="form-floating mb-3">
+      <select class="form-select" id="medicament" name="medicament" placeholder="Medicament" [(ngModel)]="id_medicament" (change)="alegeMedicament()">
+        <option *ngFor="let med of medicamente" [value]="med.id">{{ med.denumire }}</option>
+      </select>
+      <label for="medicament">Medicament</label>
+    </div>
+    <div class="col col-lg-5">
+      <div class="form-floating mb-2">
+        <input class="form-control" type="number" id="cantitate" name="cantitate" placeholder="Cantitate" [(ngModel)]="medNou.cantitate" [disabled]="!id_medicament">
+        <label for="cantitate">Cantitate</label>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="row g-2">
+    <button style="float: right;" class="btn btn-primary" type="button" (click)="adaugaMedicament()" [disabled]="!id_medicament">Adauga</button>
+  </div>
+</div>

@@ -1,8 +1,8 @@
-<h1 id="tableLabel">Medicamente</h1>
+<h2 id="tableLabel">Medicamente</h2>
 
 <p *ngIf="!meds"><em>Loading...</em></p>
 
-<div class="container py-2" style="padding-left:0px">
+<div class="container py-3" style="padding-left:0px">
   <button class="btn btn-primary" [routerLink]="['/view-medicament']">Adauga medicament</button>
   <button class="btn btn-primary" [routerLink]="['/view-loturi']" style="margin-left:10px">Adauga stoc</button>
 </div>
@@ -26,7 +26,7 @@
       <td width=30>{{ med.denumire }}</td>
       <td width=10%>{{ getForma(med.forma) }}</td>
       <td width=35%>{{ getDescriere(med.descriere) }}</td>
-      <td width=10%>{{ med.pret }}</td>
+      <td width=10%>{{ med.pret + ' lei'}}</td>
       <td width=10%>
         <button class="btn btn-secondary btn-sm" (click)="modificaClicked(med)">Modifica</button>
       </td>

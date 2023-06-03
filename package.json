@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "@nguniversal/module-map-ngfactory-loader": "^8.2.6"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.16"
   }
 }
