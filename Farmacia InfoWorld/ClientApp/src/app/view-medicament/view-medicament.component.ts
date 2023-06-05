@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { Helpers } from '../helpers';
 
 @Component({
   selector: 'app-view-medicament',
@@ -10,10 +11,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ViewMedicamentComponent implements OnInit {
 
   medicament = new Medicament();
-  baseUrl: string;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, @Inject('BASE_URL') baseUrl: string) {
-    this.baseUrl = baseUrl;
+  constructor(public http: HttpClient, @Inject('BASE_URL') public baseUrl: string, private route: ActivatedRoute, private router: Router, public authService: AuthService, public helpers: Helpers) {
+
   }
 
   ngOnInit() {
@@ -32,15 +32,15 @@ export class ViewMedicamentComponent implements OnInit {
   salveazaClicked() {
     if (!this.medicament.id) {
       this.http.post(this.baseUrl + 'medicament/adauga', this.medicament).subscribe({
-        next: (v) => {
-          this.router.navigate(['/fetch-data-medicamente']);
+        next: () => {
+          this.router.navigate(['/medicamente']);
         }
       });
     }
     else {
       this.http.post(this.baseUrl + 'medicament/modifica', this.medicament).subscribe({
-        next: (v) => {
-          this.router.navigate(['/fetch-data-medicamente']);
+        next: () => {
+          this.router.navigate(['/medicamente']);
         }
       });
     }

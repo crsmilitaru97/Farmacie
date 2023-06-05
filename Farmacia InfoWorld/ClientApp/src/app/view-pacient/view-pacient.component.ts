@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { Helpers } from '../helpers';
 
 @Component({
   selector: 'app-view-pacient',
@@ -9,11 +10,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ViewPacientComponent implements OnInit {
 
-  pacient = new Pacient();
-  baseUrl: string;
+  pacient: Pacient = new Pacient();
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, @Inject('BASE_URL') baseUrl: string) {
-    this.baseUrl = baseUrl;
+  constructor(public http: HttpClient, @Inject('BASE_URL') public baseUrl: string, private route: ActivatedRoute, private router: Router, public authService: AuthService, public helpers: Helpers) {
+    if (!authService.esteConectat)
+      this.router.navigate(['/conectare']);
   }
 
   ngOnInit() {
@@ -30,17 +31,31 @@ export class ViewPacientComponent implements OnInit {
   }
 
   salveazaClicked() {
+    if (this.pacient.cnp.length !== 13) {
+      alert("CNP-ul trebuie sa aiba 13 cifre!");
+      return;
+    }
+    if (this.pacient.telefon.length !== 10) {
+      alert("Numarul de telefon trebuie sa aiba 10 cifre!");
+      return;
+    }
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.pacient.email)) {
+      alert("Adresa de email introdusa nu este valida!");
+      return;
+    }
+
     if (!this.pacient.id) {
       this.http.post(this.baseUrl + 'pacient/adauga', this.pacient).subscribe({
-        next: (v) => {
-          this.router.navigate(['/fetch-data-pacienti']);
+        next: () => {
+          this.router.navigate(['/pacienti']);
         }
       });
     }
     else {
       this.http.post(this.baseUrl + 'pacient/modifica', this.pacient).subscribe({
-        next: (v) => {
-          this.router.navigate(['/fetch-data-pacienti']);
+        next: () => {
+          this.router.navigate(['/pacienti']);
         }
       });
     }

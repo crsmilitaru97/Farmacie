@@ -13,6 +13,7 @@ const PROXY_CONFIG = [
       "/pacient/adauga",
       "/pacient/modifica",
       "/pacient/sterge",
+      "/getpacient",
 
       "/medicament/loturi",
       "/medicament/loturi/adauga",
@@ -23,8 +24,12 @@ const PROXY_CONFIG = [
       "/comanda/adauga",
       "/comanda/aproba",
       "/comanda/modifica",
-      "/comanda/sterge"
-   ],
+      "/comanda/sterge",
+
+      "/inregistrare",
+      "/conectare",
+      "/utilizator/modifica"
+    ],
     target: target,
     secure: false,
     headers: {

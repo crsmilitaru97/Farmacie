@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Farmacia_InfoWorld.Classes;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -104,7 +105,7 @@ namespace Farmacia_InfoWorld.Controllers
                 myCommand.ExecuteNonQuery();
                 myCon.Close();
             }
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Lot adaugat");
         }
 
         [HttpPost("/medicament/adauga")]
@@ -127,7 +128,7 @@ namespace Farmacia_InfoWorld.Controllers
                 myCommand.ExecuteNonQuery();
                 myCon.Close();
             }
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Medicament adaugat");
         }
 
 
@@ -153,7 +154,7 @@ namespace Farmacia_InfoWorld.Controllers
                 myCon.Close();
             }
 
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Medicament modificat");
         }
 
 
@@ -176,7 +177,7 @@ namespace Farmacia_InfoWorld.Controllers
             }
 
 
-            return new JsonResult("Deleted Successfully");
+            return new JsonResult("Medicament sters");
         }
     }
 }

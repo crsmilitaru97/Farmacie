@@ -21,11 +21,11 @@
     <div class="row g-2">
       <div class="col col-lg-2">
         <div class="form-floating mb-3">
-          <input class="form-control" type="text" id="cnp" name="cnp" placeholder="CNP pacient" [(ngModel)]="pacient.cnp" required>
+          <input class="form-control" type="text" maxlength="13" id="cnp" name="cnp" placeholder="CNP pacient" [(ngModel)]="pacient.cnp" required>
           <label for="cnp">CNP</label>
         </div>
         <div id="personal-container" class="form-floating mb-3">
-          <input class="date form-control" type="datetime" id="data_nastere" name="data_nastere" placeholder="Data nastere pacient" [(ngModel)]="pacient.data_Nastere" required>
+          <input class="date form-control" type="date" id="data_nastere" name="data_nastere" placeholder="Data nastere pacient" [(ngModel)]="pacient.data_Nastere" required>
           <label for="data_nastere">Data nastere</label>
         </div>
       </div>
@@ -84,7 +84,7 @@
   <div class="row g-2">
     <div class="col col-lg-3">
       <div class="form-floating mb-3">
-        <input class="form-control" type="tel" id="telefon" name="telefon" placeholder="Telefon pacient" [(ngModel)]="pacient.telefon">
+        <input class="form-control" type="tel" maxlength="10" id="telefon" name="telefon" placeholder="Telefon pacient" [(ngModel)]="pacient.telefon">
         <label>Telefon</label>
         <br>
       </div>

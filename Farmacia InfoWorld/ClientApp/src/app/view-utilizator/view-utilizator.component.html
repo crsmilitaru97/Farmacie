@@ -1,0 +1,76 @@
+<h2 id="tableLabel">Conectare</h2>
+<div class="container py-5" style="text-align: center; justify-content: center; align-items: center; background-image: url('https://shorturl.at/nuEKW'); background-size: cover; ">
+
+  <form #myForm="ngForm">
+    <div class="col col-lg-2" style="display: inline-block">
+      <div class="form-floating mb-3">
+        <input class="form-control" type="email" id="email" name="email" placeholder="Email utilizator" [(ngModel)]="utilizator.email" required>
+        <label for="nume">Email</label>
+      </div>
+    </div>
+    <br />
+    <div class="col col-lg-2" style="display: inline-block">
+      <div class="form-floating mb-3">
+        <input class="form-control" type="password" id="parola" name="parola" placeholder="Parola utilizator" [(ngModel)]="utilizator.parola" required>
+        <label for="parola">Parola</label>
+      </div>
+    </div>
+    <br />
+    <div *ngIf="afisareCampuriUtilizatorNou">
+      <div class="col col-lg-2" style="display: inline-block">
+        <div class="form-floating mb-3">
+          <select class="form-select" id="tip" name="tip" placeholder="Tip utilizator" [(ngModel)]="utilizator.tip" required>
+            <option value="PAC" selected>Pacient</option>
+            <option value="FAR">Farmacist</option>
+          </select>
+          <label for="tip">Tip</label>
+        </div>
+      </div>
+      <br />
+      <div class="col col-lg-2" style="display: inline-block">
+        <div class="form-floating mb-3">
+          <input class="form-control" type="text" id="nume" name="nume" placeholder="Nume utilizator" [(ngModel)]="pacient.nume" required>
+          <label for="nume">Nume</label>
+        </div>
+      </div>
+      <br />
+      <div class="col col-lg-2" style="display: inline-block">
+        <div class="form-floating mb-3">
+          <input class="form-control" type="text" id="prenume" name="prenume" placeholder="Prenume utilizator" [(ngModel)]="pacient.prenume" required>
+          <label for="prenume">Prenume</label>
+        </div>
+      </div>
+      <br />
+      <div class="col col-lg-2" style="display: inline-block">
+        <div class="form-floating mb-3">
+          <input class="form-control" type="text" id="cnp" name="cnp" placeholder="CNP utilizator" [(ngModel)]="pacient.cnp" required>
+          <label for="cnp">CNP</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="container py-3">
+      <button class="btn btn-primary" [disabled]="!myForm.form.valid" *ngIf="!afisareCampuriUtilizatorNou" (click)="conectare()">Conecteaza-te</button>
+      <button class="btn btn-primary" [disabled]="!myForm.form.valid" *ngIf="afisareCampuriUtilizatorNou" (click)="inregistrare()">Inregistreaza-te</button>
+    </div>
+
+    <hr style="margin-left: 30%; margin-right: 30%;">
+    <div class="container py-2">
+      <button type="button" class="btn btn-secondary" (click)="toggleCampuriUtilizatorNou()" *ngIf="!afisareCampuriUtilizatorNou">Creeaza cont nou</button>
+      <button type="button" class="btn btn-secondary" (click)="toggleCampuriUtilizatorNou()" *ngIf="afisareCampuriUtilizatorNou">Conecteaza-te la un cont existent</button>
+    </div>
+
+  </form>
+
+  <div class="container py-5"> </div>
+</div>
+
+<div id="popupContainer" class="popup-container">
+  <h5 class="form-header">Conectare esuata</h5>
+  <div class="row g-2">
+    <p>Nu exista utilizator cu acesta adresa email sau parola este gresita!</p>
+  </div>
+  <br />
+  <button style="float: right;" class="btn btn-primary" type="button" (click)="toggleMesajEroareConectare()">OK</button>
+</div>
+

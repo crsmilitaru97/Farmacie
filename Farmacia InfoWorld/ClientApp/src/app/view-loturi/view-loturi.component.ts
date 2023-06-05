@@ -1,28 +1,27 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { Helpers } from '../helpers';
 
 @Component({
   selector: 'app-view-loturi',
   templateUrl: './view-loturi.component.html'
 })
-export class ViewLoturiComponent implements OnInit {
+export class ViewLoturiComponent {
+
   public medicamente: Medicament[] = [];
   public id_medicament: number | undefined;
   public loturi: Lot[] = [];
   public lotNou: Lot = new Lot;
 
-  baseUrl: string;
+  constructor(public http: HttpClient, @Inject('BASE_URL') public baseUrl: string, private route: ActivatedRoute, private router: Router, public authService: AuthService, public helpers: Helpers) {
+    if (!authService.esteConectat)
+      this.router.navigate(['/conectare']);
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, @Inject('BASE_URL') baseUrl: string) {
-    this.baseUrl = baseUrl;
     http.get<Medicament[]>(baseUrl + 'listamedicamente').subscribe({
       next: (v) => { this.medicamente = v }
     });
-  }
-
-  ngOnInit(): void {
   }
 
   alegeMedicament() {
@@ -46,8 +45,8 @@ export class ViewLoturiComponent implements OnInit {
 
 export class Lot {
   id: any;
-  data_Expirare: any;
-  cantitate: any;
+  data_Expirare: Date = new Date();
+  cantitate: number = 1;
   id_Medicament: any;
 }
 

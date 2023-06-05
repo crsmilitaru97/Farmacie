@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Farmacia_InfoWorld.Classes;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -44,7 +45,7 @@ namespace Farmacia_InfoWorld.Controllers
                         comanda.Data = Convert.ToDateTime(dr["Data"]);
                         comanda.Pret = Convert.ToDecimal(dr["Pret"]);
                         comanda.ID_Pacient = Convert.ToInt32(dr["ID_Pacient"]);
-                        comanda.Medicamente = GetMedicamente(myCon, comanda.ID_Pacient);
+                        comanda.ComandaMedicamente = GetMedicamente(myCon, comanda.ID);
                         ListaComenzi.Add(comanda);
                     }
 
@@ -56,13 +57,13 @@ namespace Farmacia_InfoWorld.Controllers
             return ListaComenzi;
         }
 
-        private static List<Medicament> GetMedicamente(SqlConnection myCon, int ID_Pacient)
+        private static List<ComandaMedicament> GetMedicamente(SqlConnection myCon, int id_comanda)
         {
-            List<Medicament> meds = new List<Medicament>();
+            List<ComandaMedicament> meds = new List<ComandaMedicament>();
             string queryMed = $@"SELECT DISTINCT ComandaMedicament.Cantitate,ComandaMedicament.ID_Medicament, * FROM Comanda
                                  INNER JOIN ComandaMedicament ON ComandaMedicament.ID_Comanda = Comanda.ID
                                  INNER JOIN Medicament ON ComandaMedicament.ID_Medicament = Medicament.ID
-                                 WHERE Comanda.ID_Pacient = {ID_Pacient}";
+                                 WHERE Comanda.ID = {id_comanda}";
 
             using (SqlCommand commandMed = new SqlCommand(queryMed, myCon))
             {
@@ -72,14 +73,18 @@ namespace Farmacia_InfoWorld.Controllers
 
                 foreach (DataRow med in tableMed.Rows)
                 {
-                    Medicament medicament = new Medicament();
-                    medicament.ID = Convert.ToInt32(med["ID_Medicament"]);
-                    medicament.Denumire = Convert.ToString(med["Denumire"]);
-                    medicament.Forma = Convert.ToString(med["Forma"]);
-                    medicament.Cantitate = Convert.ToInt32(med["Cantitate"]);
-                    medicament.Pret = Convert.ToDecimal(med["Pret"]);
+                    ComandaMedicament comandaMedicament = new ComandaMedicament();
+                    comandaMedicament.ID = Convert.ToInt32(med["ID"]);
+                    comandaMedicament.Cantitate = Convert.ToInt32(med["Cantitate"]);
+                    comandaMedicament.ID_Medicament = Convert.ToInt32(med["ID_Medicament"]);
+                    comandaMedicament.ID_Comanda = Convert.ToInt32(med["ID_Comanda"]);
 
-                    meds.Add(medicament);
+                    comandaMedicament._medicament = new Medicament();
+                    comandaMedicament._medicament.Denumire = Convert.ToString(med["Denumire"]);
+                    comandaMedicament._medicament.Forma = Convert.ToString(med["Forma"]);
+                    comandaMedicament._medicament.Pret = Convert.ToDecimal(med["Pret"]);
+
+                    meds.Add(comandaMedicament);
                 }
             }
             return meds;
@@ -107,15 +112,15 @@ namespace Farmacia_InfoWorld.Controllers
                 comanda.ID = Convert.ToInt32(myCommand.ExecuteScalar());
                 myCon.Close();
             }
-            foreach (var med in comanda.Medicamente)
+            foreach (var med in comanda.ComandaMedicamente)
             {
                 AdaugaMedicamente(med, comanda.ID);
             }
 
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Comanda adaugata cu succes");
         }
 
-        private JsonResult AdaugaMedicamente(Medicament medicament, int ID_Comanda)
+        private JsonResult AdaugaMedicamente(ComandaMedicament comandaMedicament, int ID_Comanda)
         {
             string query = @"INSERT INTO ComandaMedicament (ID_Comanda, ID_Medicament, Cantitate) 
                              VALUES (@ID_Comanda, @ID_Medicament, @Cantitate)";
@@ -126,21 +131,45 @@ namespace Farmacia_InfoWorld.Controllers
             {
                 using var myCommand = new SqlCommand(query, myCon);
                 myCommand.Parameters.AddWithValue("@ID_Comanda", ID_Comanda);
-                myCommand.Parameters.AddWithValue("@ID_Medicament", medicament.ID);
-                myCommand.Parameters.AddWithValue("@Cantitate", medicament.Cantitate);
+                myCommand.Parameters.AddWithValue("@ID_Medicament", comandaMedicament.ID_Medicament);
+                myCommand.Parameters.AddWithValue("@Cantitate", comandaMedicament.Cantitate);
 
                 myCon.Open();
                 myCommand.ExecuteNonQuery();
                 myCon.Close();
             }
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Relatie comanda-medicamente adaugata cu succes");
         }
 
 
         [HttpPost("/comanda/modifica")]
         public JsonResult ModificaComanda([FromBody] Comanda comanda)
         {
-            string query = @"UPDATE Comanda SET Status = @Status, Data = @Data, Pret = @ID_Pacient, Pret=@ID_Pacient
+            foreach (var comandaMedicament in comanda.ComandaMedicamente)
+            {
+                if (comandaMedicament._status == ComandaMedicament.Status.nemodificat)
+                    continue;
+
+                string medComQuery = string.Empty;
+
+                if (comandaMedicament._status == ComandaMedicament.Status.nou)
+                {
+                    medComQuery = @"INSERT INTO ComandaMedicament (ID_Comanda, ID_Medicament, Cantitate)
+                                    VALUES (@ID_Comanda, @ID_Medicament, @Cantitate)";
+                }
+                else if (comandaMedicament._status == ComandaMedicament.Status.modificat)
+                {
+                    medComQuery = $@"UPDATE ComandaMedicament SET Cantitate=@Cantitate
+                                     WHERE ID = {comandaMedicament.ID}";
+                }
+
+                if (!string.IsNullOrEmpty(medComQuery))
+                {
+                    AdaugaSauModificaRelatieComandaMedicamente(medComQuery, comandaMedicament, comanda.ID);
+                }
+            }
+
+            string query = @"UPDATE Comanda SET Pret=@Pret
                              WHERE ID = @ID";
 
             string sqlDataSource = _configuration.GetConnectionString("farmacieConnectionString");
@@ -148,10 +177,7 @@ namespace Farmacia_InfoWorld.Controllers
             using (var myCon = new SqlConnection(sqlDataSource))
             {
                 using var myCommand = new SqlCommand(query, myCon);
-                myCommand.Parameters.AddWithValue("@Status", comanda.Status);
-                myCommand.Parameters.AddWithValue("@Data", comanda.Data);
                 myCommand.Parameters.AddWithValue("@Pret", comanda.Pret);
-                myCommand.Parameters.AddWithValue("@ID_Pacient", comanda.ID_Pacient);
                 myCommand.Parameters.AddWithValue("@ID", comanda.ID);
 
                 myCon.Open();
@@ -159,7 +185,27 @@ namespace Farmacia_InfoWorld.Controllers
                 myCon.Close();
             }
 
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Comanda modificata cu succes");
+
+        }
+
+        private JsonResult AdaugaSauModificaRelatieComandaMedicamente(string query, ComandaMedicament comandaMedicament, int id_comanda)
+        {
+            string sqlDataSource = _configuration.GetConnectionString("farmacieConnectionString");
+
+            using (var myCon = new SqlConnection(sqlDataSource))
+            {
+                using var myCommand = new SqlCommand(query, myCon);
+                myCommand.Parameters.AddWithValue("@ID_Comanda", id_comanda);
+                myCommand.Parameters.AddWithValue("@ID_Medicament", comandaMedicament.ID_Medicament);
+                myCommand.Parameters.AddWithValue("@Cantitate", comandaMedicament.Cantitate);
+
+                myCon.Open();
+                myCommand.ExecuteNonQuery();
+                myCon.Close();
+            }
+
+            return new JsonResult("Relatie comanda-medicamente adaugata cu succes");
         }
 
 
@@ -168,31 +214,31 @@ namespace Farmacia_InfoWorld.Controllers
         {
             string sqlDataSource = _configuration.GetConnectionString("farmacieConnectionString");
 
-            foreach (var med in comanda.Medicamente)
+            foreach (var comMed in comanda.ComandaMedicamente)
             {
-                List<Lot> loturi = GetLoturi(med.ID);
+                List<Lot> loturi = GetLoturi(comMed.ID_Medicament);
                 if (loturi.Count == 0)
                 {
                     return new JsonResult(new { status = "error", message = "Nu exista stoc pentru acest medicament!" });
                 }
                 int i = 0;
 
-                while (med.Cantitate > 0)
+                while (comMed.Cantitate > 0)
                 {
-                    if (i > loturi.Count)
+                    if (comMed.Cantitate > loturi.Sum(lot => lot.Cantitate))
                     {
-                        return new JsonResult(new { status = "error", message = "Nu exista stoc destul pentru acest medicament!" });
+                        return new JsonResult(new { status = "error", message = "Nu exista stoc suficient pentru acest medicament!" });
                     }
                     var lot = loturi[i];
 
-                    if (lot.Cantitate <= med.Cantitate)
+                    if (lot.Cantitate <= comMed.Cantitate)
                     {
-                        med.Cantitate -= lot.Cantitate;
+                        comMed.Cantitate -= lot.Cantitate;
                         StergeLot(lot.ID);
                     }
                     else
                     {
-                        lot.Cantitate -= med.Cantitate;
+                        lot.Cantitate -= comMed.Cantitate;
                         ModificaLot(lot.ID, lot.Cantitate);
                         break;
                     }
@@ -215,6 +261,7 @@ namespace Farmacia_InfoWorld.Controllers
             return new JsonResult("Comanda a fost aprobata cu succes!");
         }
 
+        #region Loturi
         public JsonResult StergeLot(int id_lot)
         {
             string query = @"DELETE FROM Lot
@@ -233,7 +280,7 @@ namespace Farmacia_InfoWorld.Controllers
             }
 
 
-            return new JsonResult("Deleted Successfully");
+            return new JsonResult("Lot sters");
         }
 
         public JsonResult ModificaLot(int id_lot, int cantitateNoua)
@@ -254,7 +301,7 @@ namespace Farmacia_InfoWorld.Controllers
                 myCon.Close();
             }
 
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Lot modificat");
         }
 
         public List<Lot> GetLoturi(int id_medicament)
@@ -286,6 +333,7 @@ namespace Farmacia_InfoWorld.Controllers
             }
             return loturi;
         }
+        #endregion
 
         [HttpPost("/comanda/sterge")]
         public JsonResult StergeComanda([FromBody] Comanda comanda)
@@ -307,7 +355,7 @@ namespace Farmacia_InfoWorld.Controllers
                 myCon.Close();
             }
 
-            return new JsonResult("Deleted Successfully");
+            return new JsonResult("Comanda stearsa");
         }
 
         private JsonResult StergeRelatieComandaMedicamente(int id_comanda)
@@ -327,7 +375,7 @@ namespace Farmacia_InfoWorld.Controllers
                 myCon.Close();
             }
 
-            return new JsonResult("Deleted Successfully");
+            return new JsonResult("Relatie comanda-medicamente stearsa cu succes");
         }
     }
 }

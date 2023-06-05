@@ -3,13 +3,14 @@
 <p *ngIf="!comenzi"><em>Loading...</em></p>
 
 <div class="container py-3" style="padding-left:0px">
-  <button class="btn btn-primary" [routerLink]="['/view-comanda']">Adauga comanda</button>
+  <button class="btn btn-primary" [routerLink]="['/comanda']">Adauga comanda</button>
 </div>
 
 <table class='table table-striped' aria-labelledby="tableLabel">
   <thead>
     <tr>
       <th>Selectat</th>
+      <th>Numar</th>
       <th>Nume pacient</th>
       <th>Data si ora</th>
       <th>Status</th>
@@ -23,24 +24,24 @@
         <td width=1% align="center">
           <input *ngIf="com.status == 0" type="checkbox" [(ngModel)]="com.selectat" (change)="updateSelectedRows()">
         </td>
+        <td width=1%>{{ com.id }}</td>
         <td width=30%>{{ com.numePacient }}</td>
-        <td width=15%>{{ getDate(com.data) }}</td>
+        <td width=15%>{{ helpers.getDataTimp(com.data) }}</td>
         <td width=10% *ngIf="com.status == 0">Neaprobata</td>
         <td width=10% *ngIf="com.status == 1">Aprobata</td>
         <td width=10%>{{ com.pret }} lei</td>
         <td width=20%>
           <button class="btn btn-secondary btn-sm" *ngIf="com.status == 0" (click)="modificaClicked(com)">Modifica</button>
-          <button class="btn btn-secondary btn-sm" *ngIf="com.status == 0" (click)="aprobaClicked(com)" style="margin-left:10px">Aproba</button>
+          <button class="btn btn-secondary btn-sm" *ngIf="com.status == 0 && authService.esteFarmacist" (click)="aprobaClicked(com)" style="margin-left:10px">Aproba</button>
         </td>
         <td width=10%>
           <button style="float: right;" class="btn btn-secondary btn-sm" (click)="toggleTable(com)">Detalii</button>
         </td>
       </tr>
       <tr *ngIf="com.arataDetalii">
-        <td colspan="4">
-          <hr />
+        <td colspan="8">
           <h5 id="tableLabel">Medicamente</h5>
-          <table class='table table-striped' style="width: 100%">
+          <table class='table' style="width: 100%">
             <thead>
               <tr>
                 <th>Denumire</th>
@@ -50,20 +51,25 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let medi of com.medicamente">
-                <td width=30%>{{ medi.denumire }}</td>
-                <td width=10%>{{ getForma(medi.forma) }}</td>
+              <tr *ngFor="let medi of com.comandaMedicamente">
+                <td width=30%>{{ medi._medicament.denumire }}</td>
+                <td width=10%>{{ helpers.getForma(medi._medicament.forma) }}</td>
                 <td width=10%>{{ medi.cantitate }}</td>
-                <td width=10%>{{ medi.pret }} lei</td>
+                <td width=10%>{{ medi._medicament.pret }} lei</td>
               </tr>
             </tbody>
           </table>
           <hr />
         </td>
       </tr>
+
     </ng-container>
   </tbody>
 </table>
+
+<div class="container py-3" *ngIf="comenzi.length==0">
+  <p>Nu exista date momentan</p>
+</div>
 
 <button style="float: right;" class="btn btn-primary" (click)="stergeClicked()" [disabled]="selectedRows.length === 0">Sterge</button>
 
@@ -72,10 +78,8 @@
 <div id="popupContainer" class="popup-container">
   <h5 class="form-header">Aprobare comanda</h5>
   <div class="row g-2">
-    <p>{{ message }}</p>
+    <p>{{ mesajAprobareComanda }}</p>
   </div>
   <br />
-  <div class="row g-2">
-    <button style="float: right;" class="btn btn-primary" type="button" (click)="showMesajAprobare()">Adauga</button>
-  </div>
+  <button style="float: right;" class="btn btn-primary" type="button" (click)="toggleMesajAprobare()">OK</button>
 </div>

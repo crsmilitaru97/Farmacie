@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Farmacia_InfoWorld.Classes;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -18,7 +19,7 @@ namespace Farmacia_InfoWorld.Controllers
         }
 
         [HttpGet("/listapacienti")]
-        public IEnumerable<Pacient> GetPacient()
+        public IEnumerable<Pacient> GetPacienti()
         {
             List<Pacient> ListaPacienti = new List<Pacient>();
             string query = @"SELECT * FROM Pacient";
@@ -39,7 +40,8 @@ namespace Farmacia_InfoWorld.Controllers
                     pacient.Nume = Convert.ToString(dr["Nume"]);
                     pacient.Prenume = Convert.ToString(dr["Prenume"]);
                     pacient.CNP = Convert.ToString(dr["CNP"]);
-                    pacient.Data_Nastere = Convert.ToDateTime(dr["Data_Nastere"]);
+                    if (dr["Data_Nastere"] != DBNull.Value)
+                        pacient.Data_Nastere = Convert.ToDateTime(dr["Data_Nastere"]);
                     pacient.Telefon = Convert.ToString(dr["Telefon"]);
                     pacient.Email = Convert.ToString(dr["Email"]);
                     pacient.Adrese = GetAdrese(myCon, pacient.ID);
@@ -68,7 +70,7 @@ namespace Farmacia_InfoWorld.Controllers
 
                 foreach (DataRow med in tableMed.Rows)
                 {
-                    Adresa adresa = new Adresa(); 
+                    Adresa adresa = new Adresa();
                     adresa.ID = Convert.ToInt32(med["ID"]);
                     adresa.Tip_Adresa = Convert.ToInt32(med["Tip_Adresa"]);
                     adresa.Linie_Adresa = Convert.ToString(med["Linie_Adresa"]);
@@ -82,8 +84,45 @@ namespace Farmacia_InfoWorld.Controllers
         }
 
 
+        [HttpGet("/getpacient")]
+        public Pacient GetPacient([FromQuery] string id_pacient)
+        {
+            string query = $@"SELECT * FROM Pacient
+                             WHERE ID = {id_pacient}";
+            string connectionString = _configuration.GetConnectionString("farmacieConnectionString");
+            Pacient pacient = null;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using SqlCommand command = new SqlCommand(query, connection);
+                using SqlDataReader dr = command.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    pacient = new Pacient();
+                    pacient.ID = Convert.ToInt32(dr["ID"]);
+                    pacient.Nume = Convert.ToString(dr["Nume"]);
+                    pacient.Prenume = Convert.ToString(dr["Prenume"]);
+                    pacient.CNP = Convert.ToString(dr["CNP"]);
+                    if (dr["Data_Nastere"] != DBNull.Value)
+                        pacient.Data_Nastere = Convert.ToDateTime(dr["Data_Nastere"]);
+                    pacient.Telefon = Convert.ToString(dr["Telefon"]);
+                    pacient.Email = Convert.ToString(dr["Email"]);
+                }
+
+                dr.Close();
+                pacient.Adrese = GetAdrese(connection, pacient.ID);
+                connection.Close();
+            }
+
+            return pacient;
+        }
+
+
         [HttpPost("/pacient/adauga")]
-        public JsonResult AdaugaPacient([FromBody] Pacient pacient)
+        public int AdaugaPacient([FromBody] Pacient pacient)
         {
             string query = @"INSERT INTO Pacient (Nume, Prenume, Data_Nastere, CNP, Telefon, Email) 
                              OUTPUT inserted.ID
@@ -97,9 +136,9 @@ namespace Farmacia_InfoWorld.Controllers
                 myCommand.Parameters.AddWithValue("@Nume", pacient.Nume);
                 myCommand.Parameters.AddWithValue("@Prenume", pacient.Prenume);
                 myCommand.Parameters.AddWithValue("@CNP", pacient.CNP);
-                myCommand.Parameters.AddWithValue("@Data_Nastere", pacient.Data_Nastere);
-                myCommand.Parameters.AddWithValue("@Telefon", pacient.Telefon);
-                myCommand.Parameters.AddWithValue("@Email", pacient.Email);
+                myCommand.Parameters.AddWithValue("@Data_Nastere", pacient.Data_Nastere.Date == DateTime.Today ? (object)DBNull.Value : pacient.Data_Nastere);
+                myCommand.Parameters.AddWithValue("@Telefon", pacient.Telefon ?? (object)DBNull.Value);
+                myCommand.Parameters.AddWithValue("@Email", pacient.Email ?? (object)DBNull.Value);
 
                 myCon.Open();
                 pacient.ID = Convert.ToInt32(myCommand.ExecuteScalar());
@@ -110,7 +149,7 @@ namespace Farmacia_InfoWorld.Controllers
                 AdaugaAdresa(adr, pacient.ID);
             }
 
-            return new JsonResult("Updated Successfully");
+            return pacient.ID;
         }
 
         private JsonResult AdaugaAdresa(Adresa adresa, int ID_Pacient)
@@ -169,7 +208,7 @@ namespace Farmacia_InfoWorld.Controllers
                     AdaugaAdresa(adr, pacient.ID);
             }
 
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Pacient modificat");
         }
 
         private JsonResult ModificaAdresa(Adresa adresa)
@@ -193,13 +232,13 @@ namespace Farmacia_InfoWorld.Controllers
                 myCommand.ExecuteNonQuery();
                 myCon.Close();
             }
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Adresa modificata");
         }
 
 
         [HttpPost("/pacient/sterge")]
         public JsonResult StergePacient([FromBody] Pacient pacient)
-        {     
+        {
             foreach (var adr in pacient.Adrese)
             {
                 StergeAdresa(adr);
@@ -220,7 +259,7 @@ namespace Farmacia_InfoWorld.Controllers
             }
 
 
-            return new JsonResult("Deleted Successfully");
+            return new JsonResult("Pacient sters");
         }
 
         private JsonResult StergeAdresa(Adresa adresa)
@@ -240,7 +279,7 @@ namespace Farmacia_InfoWorld.Controllers
                 myCon.Close();
             }
 
-            return new JsonResult("Deleted Successfully");
+            return new JsonResult("Adresa stearsa");
         }
     }
 }

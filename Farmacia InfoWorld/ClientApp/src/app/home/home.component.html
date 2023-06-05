@@ -3,9 +3,9 @@
 <h4>Adauga</h4>
 <div class="jumbotron text-center">
   <div class="col">
-    <button class="home_button" [routerLink]="['/view-pacient']">Pacient nou</button>
-    <button class="home_button" [routerLink]="['/view-medicament']">Medicament nou</button>
-    <button class="home_button" [routerLink]="['/view-comanda']">Comanda noua</button>
+    <button *ngIf="authService.esteFarmacist" class="home_button" [routerLink]="['/pacient']">Pacient nou</button>
+    <button *ngIf="authService.esteFarmacist" class="home_button" [routerLink]="['/medicament']">Medicament nou</button>
+    <button class="home_button" [routerLink]="['/comanda']">Comanda noua</button>
   </div>
 </div>
 <br />

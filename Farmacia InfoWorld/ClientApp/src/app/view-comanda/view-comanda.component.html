@@ -19,7 +19,7 @@
     </div>
     <div class="col col-lg-2">
       <div id="personal-container" class="form-floating mb-3">
-        <input class="form-control" type="text" id="data" name="data" [value]="getDate(comanda.data)" disabled>
+        <input class="form-control" type="text" id="data" name="data" [value]="helpers.getDataTimp(comanda.data)" disabled>
         <label for="data">Data</label>
       </div>
     </div>
@@ -36,7 +36,7 @@
     <button id="showPopupButton" class="btn btn-primary" (click)="afiseazaAdaugaMedicament()" type="button">Adauga medicament</button>
   </div>
 
-  <table class='table table-striped' style="width: 100%">
+  <table class='table' style="width: 100%">
     <thead>
       <tr>
         <th>Denumire</th>
@@ -46,17 +46,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let medi of comanda.medicamente">
-        <td width=30% required>{{ medi.denumire }}</td>
-        <td width=10%>{{ getForma(medi.forma) }}</td>
+      <tr *ngFor="let medi of comanda.comandaMedicamente">
+        <td width=30% required>{{ medi._medicament.denumire }}</td>
+        <td width=10%>{{ helpers.getForma(medi._medicament.forma) }}</td>
         <td width=10%>{{ medi.cantitate }}</td>
-        <td width=10%>{{ medi.pret + ' lei'}}</td>
+        <td width=10%>{{ medi._medicament.pret + ' lei'}}</td>
       </tr>
     </tbody>
   </table>
 
   <br />
-  <button class="btn btn-primary" [disabled]="comanda.medicamente.length===0 || !myForm.form.valid">Salveaza</button>
+  <button class="btn btn-primary" [disabled]="comanda.comandaMedicamente.length===0 || !myForm.form.valid">Salveaza</button>
 </form>
 
 <div class="container py-5"> </div>
@@ -65,20 +65,20 @@
   <h5 class="form-header">Adauga medicament</h5>
   <div class="row g-2">
     <div class="form-floating mb-3">
-      <select class="form-select" id="medicament" name="medicament" placeholder="Medicament" [(ngModel)]="id_medicament" (change)="alegeMedicament()">
+      <select class="form-select" id="medicament" name="medicament" placeholder="Medicament" [(ngModel)]="comMedNou.iD_Medicament" (change)="alegeMedicament()">
         <option *ngFor="let med of medicamente" [value]="med.id">{{ med.denumire }}</option>
       </select>
       <label for="medicament">Medicament</label>
     </div>
     <div class="col col-lg-5">
       <div class="form-floating mb-2">
-        <input class="form-control" type="number" id="cantitate" name="cantitate" placeholder="Cantitate" [(ngModel)]="medNou.cantitate" [disabled]="!id_medicament">
+        <input class="form-control" type="number" min="1" id="cantitate" name="cantitate" placeholder="Cantitate" [(ngModel)]="comMedNou.cantitate" [disabled]="!comMedNou.iD_Medicament">
         <label for="cantitate">Cantitate</label>
       </div>
     </div>
   </div>
   <br />
   <div class="row g-2">
-    <button style="float: right;" class="btn btn-primary" type="button" (click)="adaugaMedicament()" [disabled]="!id_medicament">Adauga</button>
+    <button style="float: right;" class="btn btn-primary" type="button" (click)="adaugaMedicament()" [disabled]="!comMedNou.iD_Medicament">Adauga</button>
   </div>
 </div>

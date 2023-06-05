@@ -1,41 +1,48 @@
 <h2 id="tableLabel">Pacienti</h2>
 
-<p *ngIf="!pacs"><em>Loading...</em></p>
+<p *ngIf="!pacienti"><em>Loading...</em></p>
 
 <div class="container py-3" style="padding-left:0px">
-  <button class="btn btn-primary" [routerLink]="['/view-pacient']">Adauga pacient</button>
+  <button class="btn btn-primary" [routerLink]="['/pacient']">Adauga pacient</button>
 </div>
 
-<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="pacs">
+<div class="col col-lg-3">
+  <div class="form-floating mb-3">
+    <input class="form-control" type="text" id="filtru" name="filtru" placeholder="Filtru pacient" [(ngModel)]="filtruPacient" (input)="filterPacs()">
+    <label for="denumire">Filtru pacienti (Nume/CNP)</label>
+  </div>
+</div>
+
+<table class='table table-striped' aria-labelledby="tableLabel">
   <thead>
     <tr>
       <th>Selectat</th>
       <th>Nume</th>
-      <th>Prenume</th>
       <th>CNP</th>
       <th>Data Nastere</th>
       <th>Telefon</th>
-      <th>Email</th>
       <th>Actiuni</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let pac of pacs">
+    <tr *ngFor="let pac of pacienti">
       <td width=1% align="center">
         <input type="checkbox" [(ngModel)]="pac.selectat">
       </td>
-      <td>{{ pac.nume }}</td>
-      <td>{{ pac.prenume }}</td>
-      <td>{{ pac.cnp }}</td>
-      <td>{{ pac.data_Nastere| date:'dd.MM.yyyy'}}</td>
-      <td>{{ pac.telefon }}</td>
-      <td>{{ pac.email }}</td>
-      <td>
+      <td width=30%>{{ pac.nume }} {{ pac.prenume }}</td>
+      <td width=15%>{{ pac.cnp }}</td>
+      <td width=10%>{{ helpers.getData(pac.data_Nastere)}}</td>
+      <td width=15%>{{ pac.telefon }}</td>
+      <td width=10%>
         <button class="btn btn-secondary btn-sm" (click)="modificaClicked(pac)">Modifica</button>
       </td>
     </tr>
   </tbody>
 </table>
+
+<div class="container py-3" *ngIf="pacienti.length==0">
+  <p>Nu exista date momentan</p>
+</div>
 
 <button style="float: right;" class="btn btn-primary" (click)="stergeClicked()">Sterge</button>
 

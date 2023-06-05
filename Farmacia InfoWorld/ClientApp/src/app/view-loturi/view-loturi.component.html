@@ -4,7 +4,7 @@
   <h5 class="form-header">Medicament</h5>
   <div class="col col-lg-3">
     <div class="form-floating mb-3">
-      <select class="form-select" id="medicament" name="medicament" placeholder="Medicament" [(ngModel)]="id_medicament" (change)="alegeMedicament()">
+      <select class="form-select" id="medicament" name="medicament" placeholder="Medicament" [(ngModel)]="id_medicament" (change)="alegeMedicament()" required>
         <option *ngFor="let med of medicamente" [value]="med.id">{{ med.denumire }}</option>
       </select>
       <label for="medicament">Medicament</label>
@@ -12,7 +12,7 @@
   </div>
 
   <h5 class="form-header">Loturi</h5>
-  <table class='table table-striped' aria-labelledby="tableLabel">
+  <table class='table' aria-labelledby="tableLabel">
     <thead>
       <tr>
         <th>Data expirare</th>
@@ -21,7 +21,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let lot of loturi">
-        <td>{{ lot.data_Expirare }}</td>
+        <td>{{ helpers.getData(lot.data_Expirare) }}</td>
         <td>{{ lot.cantitate }}</td>
       </tr>
     </tbody>
@@ -37,7 +37,7 @@
     </div>
     <div class="col col-lg-2">
       <div class="form-floating mb-2">
-        <input class="form-control" type="number" id="cantitate" name="cantitate" placeholder="Cantitate" [(ngModel)]="lotNou.cantitate" required>
+        <input class="form-control" type="number" min="1" id="cantitate" name="cantitate" placeholder="Cantitate" [(ngModel)]="lotNou.cantitate" required>
         <label for="cantitate">Cantitate</label>
       </div>
     </div>

@@ -4,13 +4,13 @@
   <h5 class="form-header">Date medicament</h5>
   <div class="col col-lg-3">
     <div class="form-floating mb-3">
-      <input class="form-control" type="text" id="denumire" name="denumire" placeholder="Denumire medicament" [(ngModel)]="medicament.denumire" required>
+      <input class="form-control" type="text" id="denumire" name="denumire" placeholder="Denumire medicament" [(ngModel)]="medicament.denumire" [disabled]="!authService.esteFarmacist" required>
       <label for="denumire">Denumire</label>
     </div>
   </div>
   <div class="col col-lg-2">
     <div class="form-floating mb-3">
-      <select class="form-select" id="forma" name="forma" placeholder="Forma medicament" [(ngModel)]="medicament.forma" required>
+      <select class="form-select" id="forma" name="forma" placeholder="Forma medicament" [(ngModel)]="medicament.forma" [disabled]="!authService.esteFarmacist" required>
         <option value="COMP">Comprimate</option>
         <option value="COPF">Comprimate filmate</option>
         <option value="COPS">Comprimate de supt</option>
@@ -25,19 +25,19 @@
   </div>
   <div class="col col-lg-2">
     <div class="form-floating mb-3">
-      <input class="form-control" type="number" id="pret" name="pret" placeholder="Pret medicament" [(ngModel)]="medicament.pret" required>
+      <input class="form-control" type="number" min="0" id="pret" name="pret" placeholder="Pret medicament" [disabled]="!authService.esteFarmacist" [(ngModel)]="medicament.pret" required>
       <label for="descriere">Pret</label>
     </div>
   </div>
   <div class="col col-lg-6">
     <div class="form-floating mb-3">
-      <textarea class="form-control" type="text" id="descriere" name="descriere" placeholder="Descriere medicament" style="height: 300px;" [(ngModel)]="medicament.descriere"></textarea>
+      <textarea class="form-control" type="text" id="descriere" name="descriere" placeholder="Descriere medicament" style="height: 300px;" [disabled]="!authService.esteFarmacist" [(ngModel)]="medicament.descriere"></textarea>
       <label for="descriere">Descriere</label>
     </div>
   </div>
 
   <br />
-  <button class="btn btn-primary" [disabled]="!myForm.form.valid">Salveaza</button>
+  <button *ngIf="authService.esteFarmacist" class="btn btn-primary" [disabled]="!myForm.form.valid">Salveaza</button>
 </form>
 
 <div class="container py-5"> </div>
